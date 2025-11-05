@@ -9,10 +9,28 @@
       RadiusTopLeft: =20
       RadiusTopRight: =20
       Width: |-
-        =If(
-            cv_showSearch,
-            Container_SearchField.X + Container_SearchField.Width + Container_SearchField.Y,
-            Container_IconSearch.X + Container_IconSearch.Width + Container_IconSearch.X
+        =With(
+            {
+                collapsedWidth: Container_IconSearch.X + Container_IconSearch.Width + Container_IconSearch.X,
+                expandedWidth: Container_IconSearch.X + Container_IconSearch.Width + Container_IconSearch.X + Container_SearchField.Width + Container_IconSearch.X + Container_SearchField.Y
+            },
+            With(
+                {
+                    startWidth: If(cv_showSearch, collapsedWidth, expandedWidth),
+                    endWidth: If(cv_showSearch, expandedWidth, collapsedWidth),
+                    t: Timer_SearchBar.Value / Timer_SearchBar.Duration
+                },
+                With(
+                    {
+                        eased: If(t < 0.5, 2 * t * t, 1 - Power(-2 * t + 2, 2) / 2)
+                    },
+                    If(
+                        gv_searchbar_animating,
+                        startWidth + (endWidth - startWidth) * eased,
+                        If(cv_showSearch, expandedWidth, collapsedWidth)
+                    )
+                )
+            )
         )
       X: =50
       Y: =155
@@ -90,6 +108,7 @@
                   OnSelect: |-
                     =UpdateContext({cv_showSearch: !cv_showSearch});
                     Reset(Timer_SearchBar);
+                    Set(gv_searchbar_animating, true)
                   PaddingBottom: =(Self.Width * .4)/2
                   PaddingLeft: =Self.PaddingRight
                   PaddingRight: =Self.PaddingTop
@@ -105,7 +124,7 @@
             RadiusBottomRight: =Parent.RadiusBottomRight
             RadiusTopLeft: =Parent.RadiusTopLeft
             RadiusTopRight: =Parent.RadiusTopRight
-            Width: =350
+            Visible: =cv_showSearch || gv_searchbar_animating
             X: =Container_IconSearch.X + Container_IconSearch.Width + Self.Y
             Y: |
               =4
@@ -120,12 +139,12 @@
                   PaddingRight: =5
                   Placeholder: ="Search..."
                   TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
-                  Visible: =cv_showSearch
+                  Visible: =cv_showSearch && !gv_searchbar_animating
                   Width: =Parent.Width
       - Timer_SearchBar:
           Control: Timer@2.1.0
           Properties:
             Duration: =250
-            OnTimerEnd: =Set(gv_toggle_animating, false)
-            Start: =cv_showSearch
+            OnTimerEnd: =Set(gv_searchbar_animating, false)
+            Start: =gv_searchbar_animating
             Visible: =false
