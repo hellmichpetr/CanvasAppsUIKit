@@ -1,0 +1,274 @@
+- Container_Dropdown:
+    Control: GroupContainer@1.3.0
+    Variant: ManualLayout
+    Properties:
+      DropShadow: =DropShadow.None
+      Height: |-
+        =If(
+            Container_Dropdown_Values.Visible,
+            Min(
+                Container_Dropdown_Values.Y + Container_Dropdown_Values.Height + 1, 
+                Parent.Height - Self.Y
+            ),
+            Container_Dropdown_Search.Y + Container_Dropdown_Search.Height + Container_Dropdown_Search.Y
+        )
+      RadiusBottomLeft: =0
+      RadiusBottomRight: =0
+      RadiusTopLeft: =0
+      RadiusTopRight: =0
+      X: =50
+      Y: =247
+    Children:
+      - Container_Dropdown_Search:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Width: =Parent.Width - 2*Self.X
+            X: =2
+            Y: =2
+          Children:
+            - TextInputCanvas_Dropdown_Search:
+                Control: TextInput@0.0.54
+                Properties:
+                  Appearance: ='TextInputCanvas.Appearance'.FilledLighter
+                  BasePaletteColor: =ColorValue("#1a1a1a")
+                  BorderRadius: =Parent.RadiusTopLeft
+                  Height: =Parent.Height - 2*Self.Y
+                  Placeholder: ="Search..."
+                  TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
+                  Value: =cv_dropdownValue.'User Name'
+                  Width: |-
+                    =If(
+                        Container_Dropdown_Clear.Visible, 
+                        Container_Dropdown_Clear.X - Self.X - Self.X,
+                        Parent.Width - 2*Self.X
+                    )
+                  X: =4
+                  Y: =Self.X
+            - Container_Dropdown_Clear:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  Height: =Parent.Height - 2*Self.Y
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Visible: =!IsBlank(TextInputCanvas_Dropdown_Search.Value)
+                  Width: =Self.Height
+                  X: =Parent.Width - Self.Width - TextInputCanvas_Dropdown_Search.X
+                  Y: |
+                    =2
+                Children:
+                  - HtmlText_Dropdown_IconSearch_Background:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        Height: =Parent.Height
+                        HtmlText: |-
+                          =With(
+                              {
+                                  r: Parent.RadiusTopLeft,
+                                  c1: "#1a1a1a",
+                                  c2: "#a0a0a0",
+                                  angle: 135,
+                                  borderWidth: 1.5
+                              },
+                              "
+                              <div 
+                                  style='
+                                      width:" & Self.Width & "px; 
+                                      height:" & Self.Height - .8 & "px; 
+                                      margin:0; 
+                                      padding:0; 
+                                      box-sizing:border-box; 
+                                      border-radius:" & r & "px; 
+                                      background:linear-gradient(" & angle & "deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      overflow:hidden;
+                                  '
+                              >
+                                  <div style='
+                                      width:" & Self.Width - 2 * borderWidth & "px; 
+                                      height:" & Self.Height - 1 - 2 * borderWidth & "px; 
+                                      border-radius:" & r - borderWidth & "px;
+                                      background:linear-gradient(" & angle & "deg, " & c1 & " 0%, " & c2 & " 100%);
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      color:white;
+                                      font-family:Segoe UI, sans-serif;
+                                      font-weight:600;
+                                      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+                                  '>&nbsp;</div>
+                              </div>
+                              "
+                          )
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Width: =Parent.Width
+                  - Image_Dropdown_Search:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Height: =Parent.Height
+                        HoverFill: =RGBA(255, 255, 255, .1)
+                        Image: |-
+                          ="data:image/svg+xml;utf8, "&EncodeUrl(
+                              //Close Icon
+                              "<svg xmlns='http://www.w3.org/2000/svg' fill='#FFFFFF' aria-hidden='true' width='40px' height='40px' viewBox='0 0 20 20'><path d='m4.09 4.22.06-.07a.5.5 0 0 1 .63-.06l.07.06L10 9.29l5.15-5.14a.5.5 0 0 1 .63-.06l.07.06c.18.17.2.44.06.63l-.06.07L10.71 10l5.14 5.15c.18.17.2.44.06.63l-.06.07a.5.5 0 0 1-.63.06l-.07-.06L10 10.71l-5.15 5.14a.5.5 0 0 1-.63.06l-.07-.06a.5.5 0 0 1-.06-.63l.06-.07L9.29 10 4.15 4.85a.5.5 0 0 1-.06-.63l.06-.07-.06.07Z' fill='#FFFFFF'/></svg>"
+                          )
+                        OnSelect: |-
+                          =Reset(TextInputCanvas_Dropdown_Search);
+                          UpdateContext({cv_dropdownValue: Blank()});
+                        PaddingBottom: =(Self.Width * .4)/2
+                        PaddingLeft: =Self.PaddingRight
+                        PaddingRight: =Self.PaddingTop
+                        PaddingTop: =(Self.Height * .4)/2
+                        Width: =Parent.Width
+      - Container_Dropdown_Values:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =Gallery_Dropdown_Values.TemplateHeight * Max(Gallery_Dropdown_Values.AllItemsCount, 1) + (Gallery_Dropdown_Values.TemplatePadding * (Max(Gallery_Dropdown_Values.AllItemsCount, 2)))
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Visible: |-
+              =//Show results only when there are at least three signs in the search field
+              Len(TextInputCanvas_Dropdown_Search.Value) >= 3
+
+              //Validation if the entered value is not the same as the value selected from the dropdown
+              //This condition makes sure options are not show when there is already non-blank default value in the search field
+              //List all fields used for the search
+              And TextInputCanvas_Dropdown_Search.Value <> cv_dropdownValue.'User Name'
+              And TextInputCanvas_Dropdown_Search.Value <> cv_dropdownValue.Email
+            Width: =Parent.Width - 2*Self.X
+            X: =2
+            Y: =Container_Dropdown_Search.Y + Container_Dropdown_Search.Height + 10
+          Children:
+            - Gallery_Dropdown_Values:
+                Control: Gallery@2.15.0
+                Variant: VariableHeight
+                Properties:
+                  Height: =Parent.Height - 2*Self.Y - Self.TemplatePadding
+                  Items: |-
+                    =Search(
+                        Users,
+                        TextInputCanvas_Dropdown_Search.Value,
+                        'User Name', Email
+                    )
+                  LoadingSpinner: =LoadingSpinner.None
+                  OnSelect: |-
+                    =UpdateContext({cv_dropdownValue: ThisItem})
+                  ShowScrollbar: =false
+                  TemplateSize: =34
+                  Width: =Parent.Width - 2*Self.X
+                Children:
+                  - Container_Dropdown_Value:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =Parent.TemplateHeight - 3*Self.Y
+                        RadiusBottomLeft: =20
+                        RadiusBottomRight: =20
+                        RadiusTopLeft: =20
+                        RadiusTopRight: =20
+                        Width: =Parent.TemplateWidth - 2*Self.X
+                        X: =2
+                        Y: =1
+                      Children:
+                        - TextCanvas_Dropdown_Value:
+                            Control: Text@0.0.51
+                            Properties:
+                              Align: ='TextCanvas.Align'.Start
+                              Height: =Parent.Height
+                              PaddingLeft: =10
+                              PaddingRight: =10
+                              Text: =ThisItem.'User Name'
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width
+                        - Rectangle_Dropdown_ValueOverlay:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              Fill: =RGBA(255, 255, 255, 0)
+                              Height: =Parent.Height
+                              HoverFill: |-
+                                =ColorValue(
+                                    "#FFF7E0" //Soft yellow color
+                                    & "33" //20% transparency
+                                )
+                              OnSelect: =Select(Gallery_Dropdown_Values)
+                              Width: =Parent.Width
+            - HtmlText_Dropdown_NoValues:
+                Control: HtmlViewer@2.1.0
+                Properties:
+                  Height: =Parent.Height
+                  HtmlText: |-
+                    =With(
+                        {
+                            iconSize: 120,
+                            iconColor: "#d0d0d0",
+                            iconOpacity: 0.3,
+                            textColor: "#666666"
+                        },
+                        "
+                        <div style='
+                            width:" & Self.Width & "px; 
+                            height:" & Self.Height - 1 & "px; 
+                            margin:0; 
+                            padding:0; 
+                            box-sizing:border-box; 
+                            display:flex; 
+                            align-items:center;
+                            justify-content:center;
+                            position:relative;
+                            overflow:hidden;
+                        '>
+                            <svg 
+                                xmlns=""http://www.w3.org/2000/svg"" 
+                                width=""" & iconSize & """ 
+                                height=""" & iconSize & """ 
+                                viewBox=""0 0 24 24"" 
+                                fill=""none"" 
+                                stroke=""" & iconColor & """ 
+                                stroke-width=""1.5"" 
+                                stroke-linecap=""round"" 
+                                stroke-linejoin=""round""
+                                opacity=""" & iconOpacity & """
+                                style=""position:absolute; z-index:0;""
+                            >
+                                <circle cx=""12"" cy=""12"" r=""10""></circle>
+                                <line x1=""4.93"" y1=""4.93"" x2=""19.07"" y2=""19.07""></line>
+                            </svg>
+                            <div style=""
+                                position:relative; 
+                                z-index:1; 
+                                color:" & textColor & "; 
+                                font-family:Segoe UI, sans-serif; 
+                                font-size:16px;
+                                font-weight:400;
+                                text-align:center;
+                                line-height:1.5;
+                            "">No items found for selected filter</div>
+                        </div>
+                        "
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Visible: =Gallery_Dropdown_Values.AllItemsCount = 0
+                  Width: =Parent.Width
