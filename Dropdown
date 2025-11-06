@@ -40,7 +40,7 @@
                   BasePaletteColor: =ColorValue("#1a1a1a")
                   BorderRadius: =Parent.RadiusTopLeft
                   Height: =Parent.Height - 2*Self.Y
-                  Placeholder: ="Search..."
+                  Placeholder: ="Select..."
                   TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
                   Value: =cv_dropdownValue.'User Name'
                   Width: |-
