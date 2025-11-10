@@ -22,236 +22,40 @@
       X: =40
       Y: =330
     Children:
-      - Container_SelectedDate:
-          Control: GroupContainer@1.3.0
-          Variant: ManualLayout
+      - Timer_DateSelection_Animation:
+          Control: Timer@2.1.0
           Properties:
-            Fill: =RGBA(245, 245, 245, 1)
-            Height: =40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Width: =Container_IconCalendar.X + Container_IconCalendar.Width + Container_IconCalendar.Y
-            X: =2
+            Duration: =300
+            OnTimerEnd: =Set(gv_dateSelector_animating, false)
+            Start: =gv_dateSelector_animating
+            Visible: =false
             Y: =2
-          Children:
-            - TextCanvas_SelectedDate:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =Parent.Height
-                  PaddingLeft: =15
-                  PaddingRight: =10
-                  Text: |-
-                    =With(
-                        {
-                            dayNum: Day(cv_selectedDate)
-                        },
-                        Text(cv_selectedDate, "ddd, mmm d") 
-                        & Switch(
-                            dayNum,
-                            1, "st",
-                            21, "st",
-                            31, "st",
-                            2, "nd",
-                            22, "nd",
-                            3, "rd",
-                            23, "rd",
-                            "th"
-                        ) 
-                        & Text(cv_selectedDate, ", yyyy")
-                    )
-                  VerticalAlign: =VerticalAlign.Middle
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  Width: =200
-            - Container_IconCalendar:
-                Control: GroupContainer@1.3.0
-                Variant: ManualLayout
-                Properties:
-                  DropShadow: =DropShadow.None
-                  Height: =Parent.Height - 2*Self.Y
-                  RadiusBottomLeft: =Parent.RadiusBottomLeft
-                  RadiusBottomRight: =Parent.RadiusBottomRight
-                  RadiusTopLeft: =Parent.RadiusTopLeft
-                  RadiusTopRight: =Parent.RadiusTopRight
-                  Width: =Self.Height
-                  X: =Container_IconToday.X + Container_IconToday.Width + TextCanvas_SelectedDate.X
-                  Y: =2
-                Children:
-                  - HtmlText_IconCalendar:
-                      Control: HtmlViewer@2.1.0
-                      Properties:
-                        Height: =Parent.Height
-                        HtmlText: |-
-                          =With(
-                              {
-                                  r: Parent.RadiusTopLeft,
-                                  c1: "#1a1a1a",
-                                  c2: "#a0a0a0",
-                                  angle: 135,
-                                  borderWidth: 1.5
-                              },
-                              "
-                              <div 
-                                  style='
-                                      width:" & Self.Width & "px; 
-                                      height:" & Self.Height - .8 & "px; 
-                                      margin:0; 
-                                      padding:0; 
-                                      box-sizing:border-box; 
-                                      border-radius:" & r & "px; 
-                                      background:linear-gradient(" & angle & "deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
-                                      display:flex; 
-                                      align-items:center;
-                                      justify-content:center;
-                                      overflow:hidden;
-                                  '
-                              >
-                                  <div style='
-                                      width:" & Self.Width - 2 * borderWidth & "px; 
-                                      height:" & Self.Height - 1 - 2 * borderWidth & "px; 
-                                      border-radius:" & r - borderWidth & "px;
-                                      background:linear-gradient(" & angle & "deg, " & c1 & " 0%, " & c2 & " 100%);
-                                      display:flex; 
-                                      align-items:center;
-                                      justify-content:center;
-                                      color:white;
-                                      font-family:Segoe UI, sans-serif;
-                                      font-weight:600;
-                                      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                  '>&nbsp;</div>
-                              </div>
-                              "
-                          )
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Width: =Parent.Width
-                  - Image_IconCalendar:
-                      Control: Image@2.2.3
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Height: =36
-                        HoverFill: =RGBA(255, 255, 255, .15)
-                        Image: |-
-                          =With(
-                              {
-                                  currentDay: Day(cv_selectedDate),
-                                  iconColor: "#FFFFFF",
-                                  textColor: "#FFF7E0"
-                              },
-                              "data:image/svg+xml;utf8, " & EncodeUrl(
-                                  "<svg xmlns='http://www.w3.org/2000/svg' fill='" & iconColor & "' aria-hidden='true' width='40px' height='40px' viewBox='0 0 20 20'><path d='M14.5 3A2.5 2.5 0 0 1 17 5.34v9.16a2.5 2.5 0 0 1-2.34 2.5H5.5A2.5 2.5 0 0 1 3 14.66V5.5A2.5 2.5 0 0 1 5.34 3h9.16ZM16 7H4v7.5c0 .78.6 1.42 1.36 1.5h9.14c.78 0 1.42-.6 1.5-1.36V7Zm-1.5-3h-9c-.78 0-1.42.6-1.5 1.36V6h12v-.5c0-.78-.6-1.42-1.36-1.5h-.14Z' fill='" & iconColor & "'/><text x='10' y='13' text-anchor='middle' font-family='Segoe UI, sans-serif' font-size='" & If( currentDay <= 9, 8, 7) & "' font-weight='600' fill='" & textColor & "'>" & 
-                                  currentDay & 
-                                  "</text></svg>"
-                              )
-                          )
-                        OnSelect: |-
-                          =UpdateContext({cv_dateSelector: !cv_dateSelector})
-                        PaddingBottom: =(Self.Width * .2)/2
-                        PaddingLeft: =Self.PaddingRight
-                        PaddingRight: =Self.PaddingTop
-                        PaddingTop: =(Self.Height * .2)/2
-                        Tooltip: ="Open date selector"
-                        Width: =36
-            - Container_IconToday:
-                Control: GroupContainer@1.3.0
-                Variant: ManualLayout
-                Properties:
-                  DropShadow: =DropShadow.None
-                  Height: =Container_IconCalendar.Height
-                  RadiusBottomLeft: =Parent.RadiusBottomLeft
-                  RadiusBottomRight: =Parent.RadiusBottomRight
-                  RadiusTopLeft: =Parent.RadiusTopLeft
-                  RadiusTopRight: =Parent.RadiusTopRight
-                  Visible: =cv_selectedDate <> Today()
-                  Width: =Container_IconCalendar.Width
-                  X: =TextCanvas_SelectedDate.X + TextCanvas_SelectedDate.Width + TextCanvas_SelectedDate.X
-                  Y: =Container_IconCalendar.Y
-                Children:
-                  - HtmlText_IconToday:
-                      Control: HtmlViewer@2.1.0
-                      Properties:
-                        Height: =Parent.Height
-                        HtmlText: |-
-                          =With(
-                              {
-                                  r: Parent.RadiusTopLeft,
-                                  c1: "#1a1a1a",
-                                  c2: "#a0a0a0",
-                                  angle: 135,
-                                  borderWidth: 1.5
-                              },
-                              "
-                              <div 
-                                  style='
-                                      width:" & Self.Width & "px; 
-                                      height:" & Self.Height - .8 & "px; 
-                                      margin:0; 
-                                      padding:0; 
-                                      box-sizing:border-box; 
-                                      border-radius:" & r & "px; 
-                                      background:linear-gradient(" & angle & "deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
-                                      display:flex; 
-                                      align-items:center;
-                                      justify-content:center;
-                                      overflow:hidden;
-                                  '
-                              >
-                                  <div style='
-                                      width:" & Self.Width - 2 * borderWidth & "px; 
-                                      height:" & Self.Height - 1 - 2 * borderWidth & "px; 
-                                      border-radius:" & r - borderWidth & "px;
-                                      background:linear-gradient(" & angle & "deg, " & c1 & " 0%, " & c2 & " 100%);
-                                      display:flex; 
-                                      align-items:center;
-                                      justify-content:center;
-                                      color:white;
-                                      font-family:Segoe UI, sans-serif;
-                                      font-weight:600;
-                                      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-                                  '>&nbsp;</div>
-                              </div>
-                              "
-                          )
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Width: =Parent.Width
-                  - Image_IconToday:
-                      Control: Image@2.2.3
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Height: =Parent.Height
-                        HoverFill: =RGBA(255, 255, 255, .15)
-                        Image: |-
-                          =With(
-                              {
-                                  iconColor: "#ffffff"
-                              },
-                              "data:image/svg+xml;utf8, "&EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' fill='" & iconColor & "' aria-hidden='true' width='40px' height='40px' viewBox='0 0 20 20'><path d='M14.5 3A2.5 2.5 0 0 1 17 5.5v9a2.5 2.5 0 0 1-2.5 2.5h-3v-1h3c.83 0 1.5-.67 1.5-1.5V7H4v7.5c0 .83.67 1.5 1.5 1.5h3v1h-3A2.5 2.5 0 0 1 3 14.5v-9A2.5 2.5 0 0 1 5.5 3h9Zm0 1h-9C4.67 4 4 4.67 4 5.5V6h12v-.5c0-.83-.67-1.5-1.5-1.5ZM11 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm.88 5.07a.5.5 0 0 1-.7.06l-.68-.56v3.93a.5.5 0 1 1-1 0v-3.93l-.68.56a.5.5 0 0 1-.64-.76l1.5-1.25a.5.5 0 0 1 .64 0l1.5 1.25c.21.17.24.49.06.7Z' fill='" & iconColor & "'/></svg>")
-                          )
-                        OnSelect: |-
-                          =UpdateContext({cv_selectedDate: Today()})
-                        PaddingBottom: =(Self.Width * .2)/2
-                        PaddingLeft: =Self.PaddingRight
-                        PaddingRight: =Self.PaddingTop
-                        PaddingTop: =(Self.Height * .2)/2
-                        Tooltip: ="Select today's date"
-                        Width: =Parent.Width
       - Container_DateSelection:
           Control: GroupContainer@1.3.0
           Variant: ManualLayout
           Properties:
-            Fill: =RGBA(245, 245, 245, 1)
+            Fill: |-
+              =With(
+                  {
+                      t: Timer_DateSelection_Animation.Value / Timer_DateSelection_Animation.Duration
+                  },
+                  With(
+                      {
+                          opacity: If(
+                              gv_dateSelector_animating,
+                              If(cv_dateSelector, t, 1 - t),
+                              If(cv_dateSelector, 1, 0)
+                          )
+                      },
+                      RGBA(245, 245, 245, opacity)
+                  )
+              )
             Height: =260
             RadiusBottomLeft: =20
             RadiusBottomRight: =20
             RadiusTopLeft: =20
             RadiusTopRight: =20
-            Visible: =cv_dateSelector
+            Visible: =cv_dateSelector || gv_dateSelector_animating
             X: =Container_SelectedDate.X
             Y: =Container_SelectedDate.Y + Container_SelectedDate.Height + 10
           Children:
@@ -367,7 +171,9 @@
                             cv_selectedDate: ThisItem.FullDate,
                             cv_dateSelector: false
                         }
-                    )
+                    );
+                    Reset(Timer_DateSelection_Animation);
+                    Set(gv_dateSelector_animating, true)
                   TemplateSize: =(Self.Height - ((Self.TemplatePadding * (Self.AllItemsCount/7)) + Self.TemplatePadding)) / Max(1, (Self.AllItemsCount/7)) - 1
                   Width: =Gallery_WeekDays.Width
                   WrapCount: =7
@@ -504,8 +310,8 @@
                   Height: =Parent.Height - Self.Y
                   Items: =Sequence(12, 1, 1)
                   LoadingSpinner: =LoadingSpinner.None
-                  OnSelect: |-
-                    =UpdateContext({cv_selectedDate: Date(Year(cv_selectedDate), ThisItem.Value, Day(cv_selectedDate))})
+                  OnSelect: |
+                    =UpdateContext({cv_selectedDate: Date(Year(cv_selectedDate), ThisItem.Value, Day(cv_selectedDate))});
                   TemplatePadding: =10
                   TemplateSize: =(Self.Height - ((Self.TemplatePadding * (Self.AllItemsCount/3)) + Self.TemplatePadding)) / Max(1, (Self.AllItemsCount/3)) - 1
                   Width: =Container_YearSelection.Width
@@ -807,3 +613,224 @@
                   Height: =Parent.Height - 2*Self.Y
                   Width: =1
                   X: =(Parent.Width - Self.Width) * .55
+      - Container_SelectedDate:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(245, 245, 245, 1)
+            Height: =40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Width: =Container_IconCalendar.X + Container_IconCalendar.Width + Container_IconCalendar.Y
+            X: =2
+            Y: =2
+          Children:
+            - TextCanvas_SelectedDate:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =Parent.Height
+                  PaddingLeft: =15
+                  PaddingRight: =10
+                  Text: |-
+                    =With(
+                        {
+                            dayNum: Day(cv_selectedDate)
+                        },
+                        Text(cv_selectedDate, "ddd, mmm d") 
+                        & Switch(
+                            dayNum,
+                            1, "st",
+                            21, "st",
+                            31, "st",
+                            2, "nd",
+                            22, "nd",
+                            3, "rd",
+                            23, "rd",
+                            "th"
+                        ) 
+                        & Text(cv_selectedDate, ", yyyy")
+                    )
+                  VerticalAlign: =VerticalAlign.Middle
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =200
+            - Container_IconCalendar:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Height: =Parent.Height - 2*Self.Y
+                  RadiusBottomLeft: =Parent.RadiusBottomLeft
+                  RadiusBottomRight: =Parent.RadiusBottomRight
+                  RadiusTopLeft: =Parent.RadiusTopLeft
+                  RadiusTopRight: =Parent.RadiusTopRight
+                  Width: =Self.Height
+                  X: =Container_IconToday.X + Container_IconToday.Width + TextCanvas_SelectedDate.X
+                  Y: =2
+                Children:
+                  - HtmlText_IconCalendar:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        Height: =Parent.Height
+                        HtmlText: |-
+                          =With(
+                              {
+                                  r: Parent.RadiusTopLeft,
+                                  c1: "#1a1a1a",
+                                  c2: "#a0a0a0",
+                                  angle: 135,
+                                  borderWidth: 1.5
+                              },
+                              "
+                              <div 
+                                  style='
+                                      width:" & Self.Width & "px; 
+                                      height:" & Self.Height - .8 & "px; 
+                                      margin:0; 
+                                      padding:0; 
+                                      box-sizing:border-box; 
+                                      border-radius:" & r & "px; 
+                                      background:linear-gradient(" & angle & "deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      overflow:hidden;
+                                  '
+                              >
+                                  <div style='
+                                      width:" & Self.Width - 2 * borderWidth & "px; 
+                                      height:" & Self.Height - 1 - 2 * borderWidth & "px; 
+                                      border-radius:" & r - borderWidth & "px;
+                                      background:linear-gradient(" & angle & "deg, " & c1 & " 0%, " & c2 & " 100%);
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      color:white;
+                                      font-family:Segoe UI, sans-serif;
+                                      font-weight:600;
+                                      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+                                  '>&nbsp;</div>
+                              </div>
+                              "
+                          )
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Width: =Parent.Width
+                  - Image_IconCalendar:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Height: =36
+                        HoverFill: =RGBA(255, 255, 255, .15)
+                        Image: |-
+                          =With(
+                              {
+                                  currentDay: Day(cv_selectedDate),
+                                  iconColor: "#FFFFFF",
+                                  textColor: "#FFF7E0"
+                              },
+                              "data:image/svg+xml;utf8, " & EncodeUrl(
+                                  "<svg xmlns='http://www.w3.org/2000/svg' fill='" & iconColor & "' aria-hidden='true' width='40px' height='40px' viewBox='0 0 20 20'><path d='M14.5 3A2.5 2.5 0 0 1 17 5.34v9.16a2.5 2.5 0 0 1-2.34 2.5H5.5A2.5 2.5 0 0 1 3 14.66V5.5A2.5 2.5 0 0 1 5.34 3h9.16ZM16 7H4v7.5c0 .78.6 1.42 1.36 1.5h9.14c.78 0 1.42-.6 1.5-1.36V7Zm-1.5-3h-9c-.78 0-1.42.6-1.5 1.36V6h12v-.5c0-.78-.6-1.42-1.36-1.5h-.14Z' fill='" & iconColor & "'/><text x='10' y='13' text-anchor='middle' font-family='Segoe UI, sans-serif' font-size='" & If( currentDay <= 9, 8, 7) & "' font-weight='600' fill='" & textColor & "'>" & 
+                                  currentDay & 
+                                  "</text></svg>"
+                              )
+                          )
+                        OnSelect: |-
+                          =UpdateContext({cv_dateSelector: !cv_dateSelector});
+                          Reset(Timer_DateSelection_Animation);
+                          Set(gv_dateSelector_animating, true)
+                        PaddingBottom: =(Self.Width * .2)/2
+                        PaddingLeft: =Self.PaddingRight
+                        PaddingRight: =Self.PaddingTop
+                        PaddingTop: =(Self.Height * .2)/2
+                        Tooltip: ="Open date selector"
+                        Width: =36
+            - Container_IconToday:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Height: =Container_IconCalendar.Height
+                  RadiusBottomLeft: =Parent.RadiusBottomLeft
+                  RadiusBottomRight: =Parent.RadiusBottomRight
+                  RadiusTopLeft: =Parent.RadiusTopLeft
+                  RadiusTopRight: =Parent.RadiusTopRight
+                  Visible: =cv_selectedDate <> Today()
+                  Width: =Container_IconCalendar.Width
+                  X: =TextCanvas_SelectedDate.X + TextCanvas_SelectedDate.Width + TextCanvas_SelectedDate.X
+                  Y: =Container_IconCalendar.Y
+                Children:
+                  - HtmlText_IconToday:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        Height: =Parent.Height
+                        HtmlText: |-
+                          =With(
+                              {
+                                  r: Parent.RadiusTopLeft,
+                                  c1: "#1a1a1a",
+                                  c2: "#a0a0a0",
+                                  angle: 135,
+                                  borderWidth: 1.5
+                              },
+                              "
+                              <div 
+                                  style='
+                                      width:" & Self.Width & "px; 
+                                      height:" & Self.Height - .8 & "px; 
+                                      margin:0; 
+                                      padding:0; 
+                                      box-sizing:border-box; 
+                                      border-radius:" & r & "px; 
+                                      background:linear-gradient(" & angle & "deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      overflow:hidden;
+                                  '
+                              >
+                                  <div style='
+                                      width:" & Self.Width - 2 * borderWidth & "px; 
+                                      height:" & Self.Height - 1 - 2 * borderWidth & "px; 
+                                      border-radius:" & r - borderWidth & "px;
+                                      background:linear-gradient(" & angle & "deg, " & c1 & " 0%, " & c2 & " 100%);
+                                      display:flex; 
+                                      align-items:center;
+                                      justify-content:center;
+                                      color:white;
+                                      font-family:Segoe UI, sans-serif;
+                                      font-weight:600;
+                                      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+                                  '>&nbsp;</div>
+                              </div>
+                              "
+                          )
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Width: =Parent.Width
+                  - Image_IconToday:
+                      Control: Image@2.2.3
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Height: =Parent.Height
+                        HoverFill: =RGBA(255, 255, 255, .15)
+                        Image: |-
+                          =With(
+                              {
+                                  iconColor: "#ffffff"
+                              },
+                              "data:image/svg+xml;utf8, "&EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' fill='" & iconColor & "' aria-hidden='true' width='40px' height='40px' viewBox='0 0 20 20'><path d='M14.5 3A2.5 2.5 0 0 1 17 5.5v9a2.5 2.5 0 0 1-2.5 2.5h-3v-1h3c.83 0 1.5-.67 1.5-1.5V7H4v7.5c0 .83.67 1.5 1.5 1.5h3v1h-3A2.5 2.5 0 0 1 3 14.5v-9A2.5 2.5 0 0 1 5.5 3h9Zm0 1h-9C4.67 4 4 4.67 4 5.5V6h12v-.5c0-.83-.67-1.5-1.5-1.5ZM11 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm.88 5.07a.5.5 0 0 1-.7.06l-.68-.56v3.93a.5.5 0 1 1-1 0v-3.93l-.68.56a.5.5 0 0 1-.64-.76l1.5-1.25a.5.5 0 0 1 .64 0l1.5 1.25c.21.17.24.49.06.7Z' fill='" & iconColor & "'/></svg>")
+                          )
+                        OnSelect: |-
+                          =UpdateContext({cv_selectedDate: Today()})
+                        PaddingBottom: =(Self.Width * .2)/2
+                        PaddingLeft: =Self.PaddingRight
+                        PaddingRight: =Self.PaddingTop
+                        PaddingTop: =(Self.Height * .2)/2
+                        Tooltip: ="Select today's date"
+                        Width: =Parent.Width
