@@ -41,7 +41,7 @@
                   BorderRadius: =Parent.RadiusTopLeft
                   Height: =Parent.Height - 2*Self.Y
                   Placeholder: ="Select..."
-                  TriggerOutput: ='TextInputCanvas.TriggerOutput'.Delayed
+                  TriggerOutput: ='TextInputCanvas.TriggerOutput'.Keypress
                   Value: =cv_dropdownValue.'User Name'
                   Width: |-
                     =If(
