@@ -255,6 +255,82 @@
             X: =Container_SelectedDate.X
             Y: =Container_SelectedDate.Y + Container_SelectedDate.Height + 10
           Children:
+            - Gallery_WeekDays:
+                Control: Gallery@2.15.0
+                Variant: Horizontal
+                Properties:
+                  Height: =Container_YearSelection.Height
+                  Items: |-
+                    =[
+                        {Label: "M", WeekDay: 1},
+                        {Label: "T", WeekDay: 2},
+                        {Label: "W", WeekDay: 3},
+                        {Label: "T", WeekDay: 4},
+                        {Label: "F", WeekDay: 5},
+                        {Label: "S", WeekDay: 6},
+                        {Label: "S", WeekDay: 7}
+                    ]
+                  LoadingSpinner: =LoadingSpinner.None
+                  TemplatePadding: =0
+                  TemplateSize: =Self.Width / 7
+                  Width: =Rectangle_DateSelection_Separator.X - Self.X - Self.X
+                  X: =2
+                  Y: =Container_YearSelection.Y
+                Children:
+                  - HtmlText_WeekDay:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        Height: =Self.Width
+                        HtmlText: |-
+                          =With(
+                              {
+                                  r: 20,
+                                  c1: "#1a1a1a",
+                                  c2: "#a0a0a0",
+                                  angle: 135,
+                                  borderWidth: 1.5,
+                                  textColor: If(
+                                      ThisItem.WeekDay > 5, 
+                                      "#555555",
+                                      "#000000"
+                                  ),
+                                  textWeight: If(
+                                      ThisItem.WeekDay > 5, 
+                                      150,
+                                      600
+                                  ),
+                                  fontSize: 14
+                              },
+                              "
+                                  <div 
+                                      style='
+                                          width:" & Self.Width & "px; 
+                                          height:" & Self.Height - .8 & "px; 
+                                          margin:0; 
+                                          padding:0; 
+                                          box-sizing:border-box; 
+                                          display:flex; 
+                                          align-items:center;
+                                          justify-content:center;
+                                      '
+                                  >
+                                      <div style='
+                                          color:" & textColor & ";
+                                          font-family:Segoe UI, sans-serif;
+                                          font-size:" & fontSize & "px;
+                                          font-weight:" & textWeight & ";
+                                      '>" & ThisItem.Label & "</div>
+                                  </div>
+                                  "
+                          )
+                        OnSelect: =Select(Gallery_Calendar)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Width: =Min(Parent.TemplateWidth, Parent.TemplateHeight)
+                        X: =(Parent.TemplateWidth - Self.Width) / 2
+                        Y: =(Parent.TemplateHeight - Self.Height) / 2
             - Gallery_Calendar:
                 Control: Gallery@2.15.0
                 Variant: Vertical
@@ -284,6 +360,7 @@
                             )
                         )
                     )
+                  LoadingSpinner: =LoadingSpinner.None
                   OnSelect: |-
                     =UpdateContext(
                         {
@@ -420,87 +497,13 @@
                               PaddingRight: =0
                               PaddingTop: =0
                               Width: =Parent.Width
-            - Gallery_WeekDays:
-                Control: Gallery@2.15.0
-                Variant: Horizontal
-                Properties:
-                  Height: =Container_YearSelection.Height
-                  Items: |-
-                    =[
-                        {Label: "M", WeekDay: 1},
-                        {Label: "T", WeekDay: 2},
-                        {Label: "W", WeekDay: 3},
-                        {Label: "T", WeekDay: 4},
-                        {Label: "F", WeekDay: 5},
-                        {Label: "S", WeekDay: 6},
-                        {Label: "S", WeekDay: 7}
-                    ]
-                  TemplatePadding: =0
-                  TemplateSize: =Self.Width / 7
-                  Width: =Rectangle_DateSelection_Separator.X - Self.X - Self.X
-                  X: =2
-                  Y: =Container_YearSelection.Y
-                Children:
-                  - HtmlText_WeekDay:
-                      Control: HtmlViewer@2.1.0
-                      Properties:
-                        Height: =Self.Width
-                        HtmlText: |-
-                          =With(
-                              {
-                                  r: 20,
-                                  c1: "#1a1a1a",
-                                  c2: "#a0a0a0",
-                                  angle: 135,
-                                  borderWidth: 1.5,
-                                  textColor: If(
-                                      ThisItem.WeekDay > 5, 
-                                      "#555555",
-                                      "#000000"
-                                  ),
-                                  textWeight: If(
-                                      ThisItem.WeekDay > 5, 
-                                      150,
-                                      600
-                                  ),
-                                  fontSize: 14
-                              },
-                              "
-                                  <div 
-                                      style='
-                                          width:" & Self.Width & "px; 
-                                          height:" & Self.Height - .8 & "px; 
-                                          margin:0; 
-                                          padding:0; 
-                                          box-sizing:border-box; 
-                                          display:flex; 
-                                          align-items:center;
-                                          justify-content:center;
-                                      '
-                                  >
-                                      <div style='
-                                          color:" & textColor & ";
-                                          font-family:Segoe UI, sans-serif;
-                                          font-size:" & fontSize & "px;
-                                          font-weight:" & textWeight & ";
-                                      '>" & ThisItem.Label & "</div>
-                                  </div>
-                                  "
-                          )
-                        OnSelect: =Select(Gallery_Calendar)
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Width: =Min(Parent.TemplateWidth, Parent.TemplateHeight)
-                        X: =(Parent.TemplateWidth - Self.Width) / 2
-                        Y: =(Parent.TemplateHeight - Self.Height) / 2
             - Gallery_Months:
                 Control: Gallery@2.15.0
                 Variant: Vertical
                 Properties:
                   Height: =Parent.Height - Self.Y
                   Items: =Sequence(12, 1, 1)
+                  LoadingSpinner: =LoadingSpinner.None
                   OnSelect: |-
                     =UpdateContext({cv_selectedDate: Date(Year(cv_selectedDate), ThisItem.Value, Day(cv_selectedDate))})
                   TemplatePadding: =10
