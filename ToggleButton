@@ -2,9 +2,8 @@
     Control: GroupContainer@1.3.0
     Variant: ManualLayout
     Properties:
-      DropShadow: =DropShadow.Regular
       Fill: =RGBA(245, 245, 245, 1)
-      Height: =40
+      Height: =35
       RadiusBottomLeft: =20
       RadiusBottomRight: =20
       RadiusTopLeft: =20
@@ -122,13 +121,17 @@
             FontColor: =If(Or(cv_toggle_selection = 1, IsBlank(cv_toggle_selection)), Color.WhiteSmoke, Color.Black)
             Height: =Parent.Height - 2*Self.Y
             OnSelect: |
-              =If(
-                  cv_toggle_selection = 1,
-                  false,
-                  UpdateContext({cv_toggle_selection: 1});
-                  Reset(Timer_UnderlyingColorAnimation);
-                  Set(gv_toggle_animating, true)
-              )
+              =UpdateContext(
+                  {
+                      cv_toggle_selection: If(
+                          cv_toggle_selection = 1,
+                          2,
+                          1
+                      )
+                  }
+              );
+              Reset(Timer_UnderlyingColorAnimation);
+              Set(gv_toggle_animating, true)
             Text: ="Option 1"
             X: =2
             Y: =Self.X
@@ -139,14 +142,18 @@
             BorderRadius: =Parent.RadiusTopLeft
             FontColor: =If(Or(cv_toggle_selection = 2, IsBlank(cv_toggle_selection)), Color.WhiteSmoke, Color.Black)
             Height: =ButtonCanvas_Option1.Height
-            OnSelect: |-
-              =If(
-                  cv_toggle_selection = 2,
-                  false,
-                  UpdateContext({cv_toggle_selection: 2});
-                  Reset(Timer_UnderlyingColorAnimation);
-                  Set(gv_toggle_animating, true)
-              )
+            OnSelect: |
+              =UpdateContext(
+                  {
+                      cv_toggle_selection: If(
+                          cv_toggle_selection = 1,
+                          2,
+                          1
+                      )
+                  }
+              );
+              Reset(Timer_UnderlyingColorAnimation);
+              Set(gv_toggle_animating, true)
             Text: ="Option 2"
             X: =ButtonCanvas_Option1.X + ButtonCanvas_Option1.Width + ButtonCanvas_Option1.X
             Y: =ButtonCanvas_Option1.Y
