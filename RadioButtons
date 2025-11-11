@@ -26,15 +26,7 @@
                   ItemsCount * TemplateHeight
                   + ((ItemsCount + 1) * TemplatePadding)
               )
-            Items: |-
-              =[
-                  { Label: "Calm Blue",   Value: 1,   Color_Main: "#A3D5F5",  Color_Background: "#E8F4FA" },
-                  { Label: "Soft Yellow", Value: 1,   Color_Main: "#FFE89D",  Color_Background: "#FFF7E0" },
-                  { Label: "Mint Green",  Value: 1,   Color_Main: "#B3E5C3",  Color_Background: "#E3F6E0" },
-                  { Label: "Lavender",    Value: 1,   Color_Main: "#D4C5F9",  Color_Background: "#F1ECFF" },
-                  { Label: "Violet Gray", Value: 1,   Color_Main: "#C9C6E3",  Color_Background: "#E9E8F6" },
-                  { Label: "Sky Blue",    Value: 1,   Color_Main: "#B8E2F2",  Color_Background: "#E1F1FA" }
-              ]
+            Items: =col_radioOptions
             OnSelect: |-
               =If(
                   ThisItem in col_selectedOptions,
